@@ -1,0 +1,300 @@
+
+class Injury(db.Model):
+	class Injury(db.Model):
+	  # key_name = injury
+	  effect    = db.StringProperty()
+	  mng       = db.BooleanProperty()
+	  permanent = db.BooleanProperty()
+
+	for key_name, effect, mng, permanent in [
+        	("Badly Hurt", "No Lasting Effect", False, False),
+	        ("Broken Ribs", "Miss Next Game", True, False),
+	        ("Groin Strain", "Miss Next Game", True, False),
+        	("Gouged Eye", "Miss Next Game", True, False),
+	        ("Broken Jaw", "Miss Next Game", True, False),
+	        ("Fractured Arm", "Miss Next Game", True, False),
+	        ("Fractured Leg", "Miss Next Game", True, False),
+	        ("Smashed Hand", "Miss Next Game", True, False),
+	        ("Pinched Nerve", "Miss Next Game", True, False),
+	        ("Damaged Back", "Niggling Injury", True, True),
+	        ("Smashed Knee", "Niggling Injury", True, True),
+	        ("Smashed Hip", "-1 MA", True, True),
+	        ("Smashed Ankle", "-1 MA", True, True),
+	        ("Serious Concussion", "-1 AV", True, True),
+	        ("Fractured Skull", "-1 AV", True, True),
+	        ("Broken Neck", "-1 AG", True, True),
+	        ("Smashed Collar Bone", "-1 ST", True, True),
+	        ("Dead", "Dead", False, True)]:
+	      Injury(
+	          key_name  = key_name,
+	          effect    = effect,
+	          mng       = mng,
+	          permanent = permanent).put()
+
+
+
+class Skill(db.Model):
+   pass
+
+
+for key_name in [
+        'Strip Ball',
+        '+1 ST',
+        '+1 AG',
+        '+1 MA',
+        '+1 AV',
+        'Catch',
+        'Dodge',
+        'Sprint',
+        'Pass Block',
+        'Foul Appearance',
+        'Leap',
+        'Extra Arms',
+        'Mighty Blow',
+        'Leader',
+        'Horns',
+        'Two Heads',
+        'Stand Firm',
+        'Always Hungry',
+        'Regeneration',
+        'Take Root',
+        'Accurate',
+        'Break Tackle',
+        'Sneaky Git',
+        'Chainsaw',
+        'Dauntless',
+        'Dirty Player',
+        'Diving Catch',
+        'Dump-Off',
+        'Block',
+        'Bone-Head',
+        'Very Long Legs',
+        'Disturbing Presence',
+        'Diving Tackle',
+        'Fend',
+        'Frenzy',
+        'Grab',
+        'Guard',
+        'Hail Mary Pass',
+        'Juggernaut',
+        'Jump Up',
+        'Loner',
+        'Nerves of Steel',
+        'No Hands',
+        'Pass',
+        'Piling On',
+        'Prehensile Tail',
+        'Pro',
+        'Really Stupid',
+        'Right Stuff',
+        'Safe Throw',
+        'Secret Weapon',
+        'Shadowing',
+        'Side Step',
+        'Tackle',
+        'Strong Arm',
+        'Stunty',
+        'Sure Feet',
+        'Sure Hands',
+        'Thick Skull',
+        'Throw Team-Mate',
+        'Wild Animal',
+        'Wrestle',
+        'Tentacles',
+        'Multiple Block',
+        'Kick',
+        'Kick-Off Return',
+        'Big Hand',
+        'Claw',
+        'Ball & Chain',
+        'Stab',
+        'Hypnotic Gaze',
+        'Stakes',
+        'Bombardier',
+        'Decay',
+        "Nurgle's Rot",
+        'Titchy',
+        'BloodLust',
+        'Fan Favorite',
+        'Animosity']:
+      Skill(key_name = key_name).put()
+
+class Position(db.Model):
+	starplayer = db.BooleanProperty()
+
+for key_name, starplayer in [
+        ('Lineman', False),
+        ('Catcher', False),
+        ('Thrower', False),
+        ('Ogre', False),
+        ('Blitzer', False),
+        ('Blocker', False),
+        ('Runner', False),
+        ('Troll Slayer', False),
+        ('Deathroller', False),
+        ('Wardancer', False),
+        ('Treeman', False),
+        ('Gutter Runner', False),
+        ('Stormvermin', False),
+        ('Rat Ogre', False),
+        ('Goblin', False),
+        ('Black Orc', False),
+        ('Troll', False),
+        ('Skink', False),
+        ('Saurus', False),
+        ('Kroxigor', False),
+        ('Goblin', False),
+        ('Looney', False),
+        ('Beastman', False),
+        ('Chaos Warrior', False),
+        ('Minotaur', False),
+        ('Grashnak Blackhoof', True),
+        ('Griff Oberwald', True),
+        ('Grim Ironjaw', True),
+        ('Headsplitter', True),
+        ('Jordell Freshbreeze', True),
+        ('Ripper', True),
+        ('Slibli', True),
+        ('Varag Ghoul-Chewer', True),
+        ('Troll', False),
+        ('Pogoer', False),
+        ('Fanatic', False),
+        ('Assassin', False),
+        ('Witch Elf', False),
+        ('Horkon Heartripper', True),
+        ("Morg 'N Thorg", True),
+        ('Skeleton', False),
+        ('Zombie', False),
+        ('Ghoul', False),
+        ('Wight', False),
+        ('Mummy', False),
+        ('Count Luther von Drakenborg', True),
+        ('Halfling', False),
+        ('Berserker', False),
+        ('Ulfwerener', False),
+        ('Yhetee', False),
+        ('Linewoman', False),
+        ('Thro-Ras', False),
+        ('Blitz-Ras', False),
+        ('Tomb Guardian', False),
+        ('Wight', False),
+        ('Flesh Golem', False),
+        ('Werewolf', False),
+        ('Rotter', False),
+        ('Pestigor', False),
+        ('Nurgle Warrior', False),
+        ('Beast of Nurgle', False),
+        ('Snotling', False),
+        ('Thrall', False),
+        ('Vampire', False),
+        ('Zara the Slayer', True),
+        ('Scrappa Sorehead', True),
+        ('Eldril Sidewinder', True),
+        ('Lord Borak the Despoiler', True),
+        ('Deeproot Strongbranch', True),
+        ('Nekbrekerekh', True),
+        ('Ramtut III', True),
+        ('Icepelt Hammerblow', True),
+        ('Bombardier', False),
+        ('Hobgoblin', False),
+        ('Bull Centaur', False),
+        ('Skaven Lineman', False),
+        ('Skaven Thrower', False),
+        ('Skaven Blitzer', False),
+        ('Warpstone Troll', False),
+        ('Pit Fighter', False),
+        ('Herald', False),
+        ('Bloodletter', False),
+        ('Bloodthirster', False),
+        ('Bomber Dribblesnot', True),
+        ('Zzharg Madeye', True)]:
+      Position(
+          key_name   = key_name,
+          starplayer = starplayer).put()
+
+class Race(db.Model):
+  # key_name = racename
+  pass
+
+for key_name in [
+        'Humans',
+        'Dwarves',
+        'Skaven',
+        'Orcs',
+        'Lizardmen',
+        'Goblins',
+        'Wood Elves',
+        'Chaos',
+        'Dark Elves',
+        'Undead',
+        'Halflings',
+        'Norse',
+        'Amazon',
+        'Pro Elves',
+        'High Elves',
+        'Khemri',
+        'Necromantic',
+        'Nurgle',
+        'Ogre',
+        'Vampire',
+        'Chaos Dwarves',
+        'Khorne',
+        'Underworld']:
+      Race(key_name = key_name).put()
+
+
+class TeamLeader(db.Model):
+  # key_name = title
+  display_order = db.IntegerProperty()
+  top_text      = db.StringProperty()
+  formula       = db.StringProperty()
+
+for top_text, key_name, display_order, formula in [
+        ('Best', 'Record',  1, "AWP * 1000"),
+        ('Highest', 'Rating', 2, "Rating"),
+        ('Most', 'Silverware', 3, "TPts"),
+        ('Top', 'Offense',  4, "50*TD + 10*R + 5*P + YR + YP - 150*Pl"),
+        ('Top', 'Defense',  5, "100*I + 20*T - 50*TDA - YRA - YPA + 50*Pl"),
+        ('Top', 'Violence', 6, "100*K + 25*C + 10*KO - 150*Pl")]:
+      TeamLeader(
+          key_name      = key_name,
+          top_text      = top_text,
+          display_order = display_order,
+          formula       = formula).put()
+
+class PlayerLeader(db.Model):
+  # key_name = title
+  display_order = db.IntegerProperty()
+  formula       = db.StringProperty()
+  top_text      = db.StringProperty()
+
+for top_text, key_name, display_order, formula in [
+          ('Most',    'Legendary', 4, "SPP"),
+          ('Highest', 'Salary',    5, "Value"),
+          ('Top',     'Scorer',    1, "150*TD - 50*Pl"),
+          ('Top',     'Playmaker', 2, "50*P + 5*YP - 50*Pl"),
+          ('Top',     'Blocker',   3, "100*C + 25*KO + 10*S + 25*T - 50*Pl")]:
+      PlayerLeader(
+          key_name      = key_name,
+          top_text      = top_text,
+          display_order = display_order,
+          formula       = formula).put()
+
+class CoachLeader(db.Model):
+  # key_name = title
+  display_order = db.IntegerProperty()
+  top_text      = db.StringProperty()
+  formula       = db.StringProperty()
+
+for top_text, key_name, display_order, formula in [
+        ('Best', 'Record',  1, "AWP * 1000"),
+        ('Highest', 'Matches', 2, "Pl"),
+        ('Most', 'Silverware', 3, "TPts"),
+        ('Top', 'Offense',  4, "50*TD + 10*R + 5*P + YR + YP - 150*Pl"),
+        ('Top', 'Defense',  5, "100*I + 20*T - 50*TDA - YRA - YPA + 50*Pl"),
+        ('Top', 'Violence', 6, "100*K + 25*C + 10*KO - 150*Pl")]:
+      CoachLeader(
+          key_name      = key_name,
+          top_text      = top_text,
+          display_order = display_order,
+          formula       = formula).put()

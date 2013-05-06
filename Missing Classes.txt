@@ -1,0 +1,23 @@
+Injury
+Match
+MatchLookup
+Player
+PlayerLeader
+PlayerLeaderStanding *
+PlayerPicture *
+PlayerRecord
+Position *
+Race *
+Skill *
+SubmitData
+Team
+TeamEligibility *
+TeamLeader
+TeamLeaderStanding *
+TeamLogo *
+TeamRecord
+Tournament
+TournamentMatchup
+TournamentMatchupMembership * 
+TournamentMembership *
+TournamentPicture *

@@ -1,0 +1,87 @@
+
+<div class="match">
+  <div class="header large">
+    {{ match_data.time }} (UTC)
+    {% if match_data.tournament_match_up %}
+    <div class="tournament">
+      <i>{{ match_data.tournament_match_up.get_round_name }},</i>
+      <a rel="match_tournaments"
+        href="{{ match_data.tournament_match_up.parent.get_box_href }}">
+        {{ match_data.tournament_match_up.parent.key.name }}
+      </a>
+    </div>
+    {% endif %}
+  </div>
+  <div class="plaque">
+    {% if match_data.href %}
+    <div class="small">
+      <a rel="matches" href="{{ match_data.href }}">
+        match page</a>
+    </div>
+    {% endif %}
+    <div class="scoreline">
+      {% for label, team_data in match_data.team_data.items %}
+      <div class="logo {{ label }}_logo" style="
+        background-color: {{ team_data.record.team.color }};
+        color: {{ team_data.text_color }};">
+        <img src="{{ team_data.record.team.get_logo_url }}" />
+      </div>
+      <div class="team {{ label }}_team">
+        <div class="large">
+          <a rel="match_teams" href="{{ team_data.team_href }}">
+            {{ team_data.record.team.key.name }}
+          </a>
+        </div>
+        <div class="spacer"></div>
+        <div class="small">
+          {% if team_data.record.team.coach %}
+            <a rel="coach" href="{{ team_data.record.team.coach.get_box_href }}">
+              {{ team_data.record.team.coach.key.name }}
+            </a>          
+          {% else %}
+          <i>Unknown</i>
+          {% endif %}
+          ({{ team_data.record.team.race.key.name }})
+        </div>
+      </div>
+      {% endfor %}
+      <div class="score">
+        <div class="large">
+          {{ match_data.team_data.home.record.tds_for }} -
+          {{ match_data.team_data.away.record.tds_for }}
+        </div>
+        {% if match_data.disconnect %}
+        (Disconnect/Forfeit)
+        {% endif %}
+        {% if match_data.scorer_data %}
+        <ul class="small">
+          <li>Scorers:</li>
+          {% for tds, which, anchor in match_data.scorer_data %}
+          <li>
+          <span
+          {% if which %}
+          class="inactive"
+          {% else %}
+          class="active"
+          {% endif %}
+          >&larr;</span>
+          {{ anchor|safe }}
+          {% if tds %}
+          ({{ tds }})
+          {% endif %}
+          <span
+          {% if which %}
+          class="active"
+          {% else %}
+          class="inactive"
+          {% endif %}
+          >&rarr;</span>
+          </li>
+          {% endfor %}
+        </ul>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+

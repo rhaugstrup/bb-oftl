@@ -1,0 +1,50 @@
+<script type="text/javascript">
+$(function() {
+  analytics();
+  $('a[rel="coach"]').colorbox({
+    current: "",
+    href: function() { return $(this).attr('href').replace("#", ""); },
+    scrolling: false
+  });
+  $('a[rel="team"]').colorbox({
+    current: "",
+    href: function() { return $(this).attr('href').replace("#", ""); },
+    scrolling: false
+  });
+  $('.tablesorter').tablesorter();
+});
+</script>
+
+<p>
+The OFTL ranks teams along three metrics:
+Adjusted Winning Percentage, Tournament Points. and Glicko Rating. 
+Details on each of the three can be found on the forums in the
+<a href="http://www.shalkith.com/bloodbowl/forum/viewtopic.php?f=13&t=4">OFTL League Rules and FAQ</a>.
+</p>
+<p>
+A team's listed Team Value (TV) is an estimate based on the TV from the previous
+match with an extra 20 points for every pending level-up.
+For fairness in tournament enrollment, the TV includes the values of <i>all</i>
+current players, including those who are out for the next match.
+</p>
+<p>
+The table below is sortable by column (as are most of the other tables on the
+site). 
+To sort by multiple columns, shift-click additional sort columns.
+</p>
+
+<div class="h2">
+<h2>Active Team Listing</h2>
+</div>
+{% with tables.active as table %}
+{% include "table.html" %}
+{% endwith %}
+
+{% comment %}
+<div class="h2">
+<h2>Retired Team Listing</h2>
+</div>
+{% with tables.retired as table %}
+{% include "table.html" %}
+{% endwith %}
+{% endcomment %}

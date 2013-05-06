@@ -1,0 +1,179 @@
+
+<style type="text/css">
+
+div.player_box div.photo {
+  background-image: url({{ player.get_box_pic_url }});
+}
+div.player_box div.banner {
+  background-color: {{ player.team.color }};
+  color: {{ banner_text_color }};
+}
+
+</style>
+
+<script type="text/javascript">
+
+$(function() {
+
+  $("#{{ player.key }}-show-averages-toggle").html("Total")
+  .toggle(function () {
+    $(this).html("Average")
+    $('.tot_stat').fadeOut(500, function() {
+      $('.ave_stat').fadeIn(500);
+    });
+  }, function () {
+    $(this).html("Total")
+    $('.ave_stat').fadeOut(500, function() {
+      $('.tot_stat').fadeIn(500);
+    });
+  });
+
+  $('.match_stats').tablesorter({
+    sortList: [[0,1]]
+  });
+
+  $('a[rel="player_opponents"]').colorbox({
+    current: "",
+    href: function() { return $(this).attr('href').replace("#", ""); },
+    copy: true,
+    scrolling: false
+  });
+
+  $('a[rel="player_matches"]').colorbox({
+    current: "",
+    href: function() { return $(this).attr('href').replace("#", ""); },
+    copy: true,
+    scrolling: false
+  });
+
+  $('a[rel="player_team"]').colorbox({
+    current: "",
+    href: function() { return $(this).attr('href').replace("#", ""); },
+    copy: true,
+    scrolling: false
+  });
+
+  $('.hidden').hide()
+  $('div.show_hidden .link').click(function () {
+    $('div.hidden').show();
+    $(this).hide();
+    $.fn.colorbox.resize();
+  });
+});
+
+</script>
+
+<div class="player_box box">
+  <div class="photo">
+    <img class="logo_left"  src="{{ player.team.get_logo_url }}" />
+    {% if not player.pic %}
+    <div class="no_photo">
+      Photo unavailable.  Using generic.
+    </div>
+    {% endif %}
+    <div class="photo_name">
+      <span class="title">{{ player.name }}</span>
+    </div>
+  </div>
+  <div class="card">
+    <div class="banner">
+      <span class="title">{{ player.name }}</span>
+    </div>
+    <div class="player_name">
+      <span class="title">#{{ player.number }},
+        <a rel="player_team" href="{{ player.team.get_box_href }}">
+          {{ player.team.key.name }}
+        </a>
+      </span>
+      {% if player.retired %}
+      <br />
+      (Retired)
+      {% endif %}
+    </div>
+
+    <!-- attributes table -->
+    {% with attr_table as table %}
+    {% include "table.html" %}
+    {% endwith %}
+
+    <!-- profile -->
+    <table class="profile">
+      <tbody> 
+        <tr>
+          <td>Position:</td>
+          <td>{{ player.position.key.name }}</td>
+        </tr>
+        <tr>
+          <td>Level:</td>
+          <td>
+            {% for level in player.level|get_range %}
+            <img src="images/misc/star.png" />
+            {% endfor %}
+            &nbsp;&nbsp;({{ player.spp }} SPP)
+          </td>
+        </tr>
+        <tr>
+          <td>Annual Salary:</td>
+          <td>
+            {{ player.value }} Gold Crowns
+          </td>
+        </tr>
+        <tr>
+          <td>Skills:</td>
+          <td>
+            {% if skills %}
+            {{ skills|safe }}
+            {% else %}
+            <i>None</i>
+            {% endif %}
+          </td>
+        </tr>
+        <tr>
+          <td>Injuries:</td>
+          <td>
+            {% if injuries %}
+            {{ injuries }}
+            {% else %}
+            <i>None</i>
+            {% endif %}
+          </td>
+        </tr>
+        {% if player.bio.strip %}
+        <tr>
+          <td>Biography:</td>
+        </tr>
+        {% endif %}
+      </tbody>
+    </table>
+
+    {% if player.bio.strip %}
+    <div class="bio">
+      {{ player.bio|linebreaks }}
+    </div>
+    {% endif %}
+    
+    <div class="show_hidden">
+      <span class="link">more</span>
+    </div>
+  </div>
+  <br style="clear: both" />
+
+  <div class="hidden">
+    <div class="h2">
+      <h2>Player Statistics</h2>
+    </div>
+    {% with stat_table as table %}
+    {% include "table.html" %}
+    {% endwith %}
+
+    <div class="h2">
+      <h2>Player Match History</h2>
+    </div>
+    {% with match_table as table %}
+    {% include "table.html" %}
+    {% endwith %}
+  </div>
+
+</div>
+
+

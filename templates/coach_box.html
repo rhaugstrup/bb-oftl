@@ -1,0 +1,239 @@
+<style type="text/css">
+
+div.team_box div.banner {
+  background-color: {{ coach.color }};
+  color: {{ banner_text_color }};
+}
+
+</style>
+
+<script type="text/javascript">
+
+$(function() {
+  $('#{{ coach.key }}-matches').accordion();
+
+  // don't do this -- think of the match link:
+  // $('.match_stats').tablesorter();
+
+  $('#{{ team_table.id }}').tablesorter({
+    sortInitialOrder: "desc",
+    sortList: [[0,0]]
+  });
+
+  $("#{{ coach.key }}-show-averages-toggle").html("Total")
+  .toggle(function () {
+    $(this).html("Average")
+    $('.tot_stat').fadeOut(500, function() {
+      $('.ave_stat').fadeIn(500);
+    });
+  }, function () {
+    $(this).html("Total")
+    $('.ave_stat').fadeOut(500, function() {
+      $('.tot_stat').fadeIn(500);
+    });
+  });
+
+  $('a[rel="trophy_tournaments"]').colorbox({
+    current: "",
+    href: function() { return $(this).attr('href').replace("#", ""); },
+    copy: true,
+    scrolling: false
+  });
+
+  $('a[rel="team_tournaments"]').colorbox({
+    current: "",
+    href: function() { return $(this).attr('href').replace("#", ""); },
+    copy: true,
+    scrolling: false
+  });
+
+  $('a[rel="team_opponents"]').colorbox({
+    current: "",
+    href: function() { return $(this).attr('href').replace("#", ""); },
+    copy: true,
+    scrolling: false
+  });
+
+  $('a[rel="team_matches"]').colorbox({
+    current: "",
+    href: function() { return $(this).attr('href').replace("#", ""); },
+    copy: true,
+    scrolling: false
+  });
+  
+  $('a[rel="team"]').colorbox({
+    current: "",
+    href: function() { return $(this).attr('href').replace("#", ""); },
+    scrolling: false
+  });
+
+  $('a[rel="team_players"]').colorbox({
+    current: "",
+    href: function() { return $(this).attr('href').replace("#", ""); },
+    copy: true,
+    scrolling: false
+  });
+
+  $('.hidden').hide()
+  $('div.show_hidden .link').click(function () {
+    $('div.hidden').show();
+    $(this).hide();
+    $.fn.colorbox.resize();
+  });
+
+  var win_width  = (325 * {{ coach_stats.wins }} / {{ longest_bar_length }}) + "px";
+  var draw_width = (325 * {{ coach_stats.draws }} / {{ longest_bar_length }}) + "px";
+  var loss_width = (325 * {{ coach_stats.losses }} / {{ longest_bar_length }}) + "px";
+
+  $('#{{ coach.key }}-win-bar' ).animate( { width: win_width  }, 1500, "easeOutCirc");
+  $('#{{ coach.key }}-draw-bar').animate( { width: draw_width }, 1500, "easeOutCirc");
+  $('#{{ coach.key }}-loss-bar').animate( { width: loss_width }, 1500, "easeOutCirc");
+});
+
+</script>
+
+
+<div class="team_box box">
+  <div class="banner">
+    <img class="logo_left"  src="{{ coach.get_logo_url }}" />
+    <img class="logo_right" src="{{ coach.get_logo_url }}" />
+    <span class="title">{{ coach.key.name }}</span>
+  </div>
+
+  <div class="info">
+
+    <!-- race right float -->
+    <img class="race" src="{{ coach.get_logo_url }}" />
+
+    <!-- center graph -->
+    <table class="graph">
+      <tbody>
+        <tr>
+          <td>W</td>
+          <td><div id="{{ coach.key }}-win-bar" class="bar green_bg green_border"></div></td>
+        </tr>
+        <tr>
+          <td>D</td>
+          <td><div id="{{ coach.key }}-draw-bar" class="bar yellow_bg yellow_border"></div></td>
+        </tr>
+        <tr>
+          <td>L</td>
+          <td><div id="{{ coach.key }}-loss-bar" class="bar red_bg red_border"></div></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- profile -->
+    <table class="profile">
+      <tbody> 
+		<tr>
+          <td title="Adjusted Win Percentage">AWP:</td>
+          <td>{{ coach_stats.awp }}</td>
+        </tr>		
+		<tr>
+          <td title="Record">Record:</td>
+          <td>{{ coach_stats.wins }} - {{ coach_stats.draws }} - {{ coach_stats.losses }}</td>
+        </tr>
+		<tr>
+          <td title="Matches">Matches:</td>
+          <td>{{ coach_stats.matches }}</td>
+        </tr>
+        <tr>
+          <td title="Tournament Points">Tournament Points:</td>
+          <td>{{ coach_stats.tpts }}</td>
+        </tr>
+        <tr>
+        <tr>
+          <td title="Total Touchdowns">Total Touchdowns:</td>
+          <td>{{ coach_stats.tds_for }}</td>
+        </tr>
+		<tr>
+          <td title="Total Touchdowns">Touchdowns Allowed:</td>
+          <td>{{ coach_stats.tds_against }}</td>
+        </tr>
+		<tr>
+          <td title="Total Casualties Inflicted Against Opponents">Casualties Inflicted:</td>
+          <td>{{ coach_stats.cas_for }}</td>
+        </tr>
+		<tr>
+          <td title="Total Casualties Suffered By Opponents">Casualties Suffered:</td>
+          <td>{{ coach_stats.cas_against }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  {% if coach_stats.tpts %}
+  <div class="h2">
+    <h2>Trophy Cabinet</h2>
+  </div>
+  <div class="trophies">
+    {% for team in coach.team_set %}
+      {% for tournament in team.tournament_set %}
+    
+      <div class="trophy">
+        {% if tournament.pic %}
+        <img src='get_trophy?size=cabinet&tournament_key={{ tournament.key }}' />
+        {% else %}
+        <div class="no_img_text">
+          no image
+        </div>
+        {% endif %}
+        <br />
+        <a rel="trophy_tournaments" href="{{tournament.get_box_href }}">
+          {{ tournament.key.name }}</a>
+      </div>
+	  {% endfor %}
+    {% endfor %}
+    <br style="clear: both" />
+  </div>
+  {% endif %}
+
+  {% if coach.bio %}
+  <div class="h2">
+    <h2>Biography</h2>
+  </div>
+  <p>
+    {{ coach.bio|linebreaks }}
+  </p>
+  {% endif %}
+
+  <div class="h2">
+    <h2>Teams</h2>
+  </div>
+  {% with team_table as table %}
+  {% include "table.html" %}
+  {% endwith %}
+
+  <div class="show_hidden">
+    <span class="link">more</span>
+  </div>
+
+  <div class="hidden">
+    <div class="h2">
+      <h2>Coach Statistics</h2>
+    </div>
+    {% with stat_table as table %}
+    {% include "table.html" %}
+    {% endwith %}
+
+
+    <div class="h2">
+      <h2>Match History</h2>
+    </div>
+
+    <div class="team_matches" id="{{ coach.key }}-matches">
+      {% for href, match_table in match_tables %}
+      <h3><a href="#"> {{ match_table.title|safe }} </a></h3>
+      <div class="team_match">
+        {% with match_table as table %}
+        {% include "table.html" %}
+        {% endwith %}
+      </div>
+      {% endfor %}
+    </div>
+
+  </div>
+</div>
+
+

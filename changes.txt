@@ -1,0 +1,14 @@
+Changes:
+
+Add to static\index.html
+<li><a href="coach_leaders">Coach Rankings</a></li>
+
+Create coach_leaders.html
+
+Add to main.py
+  ('/coach_leaders',       views.CoachLeaders),
+
+
+Added CoachLeader and CoachLeaderStandings classes to leader.py
+
+update _init_ in views and models

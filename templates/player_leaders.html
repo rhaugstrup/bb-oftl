@@ -1,0 +1,22 @@
+
+{% extends "leaders.html" %}
+
+{% block javascript %}
+  $('a[rel="leader_player"]').colorbox({
+    current: "",
+    href: function() { return $(this).attr('href').replace("#", ""); },
+    scrolling: false
+  });
+{% endblock %}
+
+{% block boxes %}
+<div class="leader_box leader_box_active"></div>
+{% for player in leaders %}
+  <div class="leader_box leader_box_{{ forloop.counter }}">
+    <img class="player_img" src='{{ player.get_leader_pic_url }}' />
+  </div>
+{% endfor %}
+{% endblock %}
+
+
+

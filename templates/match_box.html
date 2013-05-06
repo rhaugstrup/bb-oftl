@@ -1,0 +1,73 @@
+
+<script type="text/javascript">
+$(function() {
+  $('a[rel="match_teams"]').colorbox({
+    current: "",
+    href: function() { return $(this).attr('href').replace("#", ""); },
+    copy: true,
+    scrolling: false
+  });
+  $('a[rel="match_tournaments"]').colorbox({
+    current: "",
+    href: function() { return $(this).attr('href').replace("#", ""); },
+    copy: true,
+    scrolling: false
+  });
+  $('a[rel="match_players"]').colorbox({
+    current: "",
+    href: function() { return $(this).attr('href').replace("#", ""); },
+    copy: true,
+    scrolling: false
+  });
+
+  $('.team_match_table').tablesorter();
+  $('.player_match_table').tablesorter({
+    sortList: [[0,0]]
+  });
+  $('.injury_table').tablesorter();
+});
+</script>
+
+<div class="box match_box">
+{% include "match_header.html" %}
+
+<div class="h2">
+  <h2>Team Statistics</h2>
+</div>
+{% with team_match_table as table %}
+{% include "table.html" %}
+{% endwith %}
+
+<div class="h2">
+  <h2>Player Statistics</h2>
+</div>
+<script type="text/javascript">
+  $(function() {
+    $('.match_player_tables').accordion({
+      autoHeight: false,
+      change: function() { $.fn.colorbox.resize() }
+    });
+  });
+</script>
+<div class="match_player_tables">
+  {% for team, table in player_match_tables %}
+  <h3><a href="#"> {{ team }} </a></h3>
+  <div>
+    {% include "table.html" %}
+  </div>
+  {% endfor %}
+</div>
+
+{% if injury_table %}
+<div class="h2">
+  <h2>Player Casualties</h2>
+</div>
+{% with injury_table as table %}
+{% include "table.html" %}
+{% endwith %}
+{% endif %}
+
+</div>
+
+
+

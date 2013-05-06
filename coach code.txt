@@ -1,0 +1,304 @@
+from google.appengine.api import users
+from google.appengine.ext import db
+from models import *
+
+def i2s(val): return str(int(val)) # do not use str() in case of unicode
+
+class CoachStats(db.Model):
+  coach            = db.ReferenceProperty(Coach)
+  tv_for           = db.IntegerProperty(default=0)
+  tv_against       = db.IntegerProperty(default=0)
+  tds_for          = db.IntegerProperty(default=0)
+  tds_against      = db.IntegerProperty(default=0)
+  passes_for       = db.IntegerProperty(default=0)
+  passes_against   = db.IntegerProperty(default=0)
+  pyards_for       = db.IntegerProperty(default=0)
+  pyards_against   = db.IntegerProperty(default=0)
+  rec_for          = db.IntegerProperty(default=0)
+  rec_against      = db.IntegerProperty(default=0)
+  ryards_for       = db.IntegerProperty(default=0)
+  ryards_against   = db.IntegerProperty(default=0)
+  int_for          = db.IntegerProperty(default=0)
+  int_against      = db.IntegerProperty(default=0)
+  kills_for        = db.IntegerProperty(default=0)
+  kills_against    = db.IntegerProperty(default=0)
+  cas_for          = db.IntegerProperty(default=0)
+  cas_against      = db.IntegerProperty(default=0)
+  ko_for           = db.IntegerProperty(default=0)
+  ko_against       = db.IntegerProperty(default=0)
+  stun_for         = db.IntegerProperty(default=0)
+  stun_against     = db.IntegerProperty(default=0)
+  tckl_for         = db.IntegerProperty(default=0)
+  tckl_against     = db.IntegerProperty(default=0)
+
+  def accumulate(self, team_stats):
+    for property in CoachStats.properties():
+      setattr(self, property,
+          getattr(self, property) +
+          getattr(team_stats, property))
+
+  def reset(self):
+    for property in CoachStats.properties():
+      setattr(self, property, 0)
+
+for coach in Coach.all():
+   total_wins = 0
+   total_draws = 0
+   total_losses = 0
+   for team in Team.all().filter("coach = ", coach).filter("retired =", False):
+     total_wins = total_wins + team.wins
+     total_draws = total_draws + team.draws
+     total_losses = total_losses + team.losses   
+   print team.coach.key().name() + ": " + i2s(total_wins)+"-"+i2s(total_draws)+"-"+i2s(total_losses) 
+
+
+###################################################################################################################################
+
+from google.appengine.api import users
+from google.appengine.ext import db
+from models import *
+
+def i2s(val): return str(int(val)) # do not use str() in case of unicode
+
+class CoachStats(db.Model):
+  coach            = db.ReferenceProperty(models.Coach)
+  tv_for           = db.IntegerProperty(default=0)
+  tv_against       = db.IntegerProperty(default=0)
+  tds_for          = db.IntegerProperty(default=0)
+  tds_against      = db.IntegerProperty(default=0)
+  passes_for       = db.IntegerProperty(default=0)
+  passes_against   = db.IntegerProperty(default=0)
+  pyards_for       = db.IntegerProperty(default=0)
+  pyards_against   = db.IntegerProperty(default=0)
+  rec_for          = db.IntegerProperty(default=0)
+  rec_against      = db.IntegerProperty(default=0)
+  ryards_for       = db.IntegerProperty(default=0)
+  ryards_against   = db.IntegerProperty(default=0)
+  int_for          = db.IntegerProperty(default=0)
+  int_against      = db.IntegerProperty(default=0)
+  kills_for        = db.IntegerProperty(default=0)
+  kills_against    = db.IntegerProperty(default=0)
+  cas_for          = db.IntegerProperty(default=0)
+  cas_against      = db.IntegerProperty(default=0)
+  ko_for           = db.IntegerProperty(default=0)
+  ko_against       = db.IntegerProperty(default=0)
+  stun_for         = db.IntegerProperty(default=0)
+  stun_against     = db.IntegerProperty(default=0)
+  tckl_for         = db.IntegerProperty(default=0)
+  tckl_against     = db.IntegerProperty(default=0)
+  matches          = db.IntegerProperty(default=0)
+  wins             = db.IntegerProperty(default=0)
+  draws            = db.IntegerProperty(default=0)
+  losses           = db.IntegerProperty(default=0)
+
+  # pre bb-oftl record statistics
+  pre_wins       = db.IntegerProperty()
+  pre_draws      = db.IntegerProperty()
+  pre_losses     = db.IntegerProperty()
+
+  # tournament points
+  tpts       = db.IntegerProperty(default=0)
+
+  # adjusted win percentage
+  awp        = db.FloatProperty(default=0.0)
+
+  def accumulate(self, team_stats):
+    for property in CoachStats.properties():
+      setattr(self, property,
+          getattr(self, property) +
+          getattr(team_stats, property))
+
+  def reset(self):
+    for property in CoachStats.properties():
+      setattr(self, property, 0)
+
+for coach in Coach.all():
+   coach_stats = CoachStats.get_or_insert(coach)
+   # coach_stats = CoachStats.all().filter("coach = ", coach)
+   for team in Team.all().filter("coach = ", coach).filter("retired =", False):
+      CoachStats.accumulate(coach_stats, team)
+   print coach_stats
+
+###########################################################################################################################################
+from google.appengine.api import users
+from google.appengine.ext import db
+from models import *
+
+def i2s(val): return str(int(val)) # do not use str() in case of unicode
+
+class CoachStats(db.Model):
+#  coach            = db.ReferenceProperty(Coach)
+  tds_for          = db.IntegerProperty(default=0)
+  tds_against      = db.IntegerProperty(default=0)
+  passes_for       = db.IntegerProperty(default=0)
+  passes_against   = db.IntegerProperty(default=0)
+  pyards_for       = db.IntegerProperty(default=0)
+  pyards_against   = db.IntegerProperty(default=0)
+  rec_for          = db.IntegerProperty(default=0)
+  rec_against      = db.IntegerProperty(default=0)
+  ryards_for       = db.IntegerProperty(default=0)
+  ryards_against   = db.IntegerProperty(default=0)
+  int_for          = db.IntegerProperty(default=0)
+  int_against      = db.IntegerProperty(default=0)
+  kills_for        = db.IntegerProperty(default=0)
+  kills_against    = db.IntegerProperty(default=0)
+  cas_for          = db.IntegerProperty(default=0)
+  cas_against      = db.IntegerProperty(default=0)
+  ko_for           = db.IntegerProperty(default=0)
+  ko_against       = db.IntegerProperty(default=0)
+  stun_for         = db.IntegerProperty(default=0)
+  stun_against     = db.IntegerProperty(default=0)
+  tckl_for         = db.IntegerProperty(default=0)
+  tckl_against     = db.IntegerProperty(default=0)
+ 
+  matches          = db.IntegerProperty(default=0)
+  wins             = db.IntegerProperty(default=0)
+  draws            = db.IntegerProperty(default=0)
+  losses           = db.IntegerProperty(default=0)
+
+  # pre bb-oftl record statistics
+#  pre_wins       = db.IntegerProperty()
+#  pre_draws      = db.IntegerProperty()
+#  pre_losses     = db.IntegerProperty()
+
+  # tournament points
+  tpts       = db.IntegerProperty(default=0)
+
+  # adjusted win percentage
+  awp        = db.FloatProperty(default=0.0)
+
+  def accumulate(self, team_stats):
+    for property in CoachStats.properties():
+      setattr(self, property,
+          getattr(self, property) +
+          getattr(team_stats, property))
+
+  def reset(self):
+    for property in CoachStats.properties():
+      setattr(self, property, 0)
+
+  def compute_awp(self):
+    self.awp = max(0.0,
+        (self.wins + self.draws/2.0) / self.matches - 
+        1 / math.sqrt(self.matches))
+
+for coach in Coach.all():
+   coach_stats = CoachStats(parent=coach)
+   print coach.key().name()
+   for team in Team.all().filter("coach = ", coach):
+       print "   " + team.key().name()
+       CoachStats.accumulate(coach_stats, team)
+   CoachStats.compute_awp(coach_stats)
+   coach_stats.put()
+
+###########################################################################################################################################
+
+from google.appengine.api import users
+from google.appengine.ext import db
+from models import *
+
+def i2s(val): return str(int(val)) # do not use str() in case of unicode
+
+class CoachStats(db.Model):
+  #  coach            = db.ReferenceProperty(Coach, collection_name="stats")
+  tds_for          = db.IntegerProperty(default=0)
+  tds_against      = db.IntegerProperty(default=0)
+  passes_for       = db.IntegerProperty(default=0)
+  passes_against   = db.IntegerProperty(default=0)
+  pyards_for       = db.IntegerProperty(default=0)
+  pyards_against   = db.IntegerProperty(default=0)
+  rec_for          = db.IntegerProperty(default=0)
+  rec_against      = db.IntegerProperty(default=0)
+  ryards_for       = db.IntegerProperty(default=0)
+  ryards_against   = db.IntegerProperty(default=0)
+  int_for          = db.IntegerProperty(default=0)
+  int_against      = db.IntegerProperty(default=0)
+  kills_for        = db.IntegerProperty(default=0)
+  kills_against    = db.IntegerProperty(default=0)
+  cas_for          = db.IntegerProperty(default=0)
+  cas_against      = db.IntegerProperty(default=0)
+  ko_for           = db.IntegerProperty(default=0)
+  ko_against       = db.IntegerProperty(default=0)
+  stun_for         = db.IntegerProperty(default=0)
+  stun_against     = db.IntegerProperty(default=0)
+  tckl_for         = db.IntegerProperty(default=0)
+  tckl_against     = db.IntegerProperty(default=0)
+ 
+  matches          = db.IntegerProperty(default=0)
+  wins             = db.IntegerProperty(default=0)
+  draws            = db.IntegerProperty(default=0)
+  losses           = db.IntegerProperty(default=0)
+
+  # pre bb-oftl record statistics
+#  pre_wins       = db.IntegerProperty()
+#  pre_draws      = db.IntegerProperty()
+#  pre_losses     = db.IntegerProperty()
+
+  # tournament points
+  tpts       = db.IntegerProperty(default=0)
+
+  # adjusted win percentage
+  awp        = db.FloatProperty(default=0.0)
+
+  def accumulate(self, team_stats):
+    for property in CoachStats.properties():
+      setattr(self, property,
+          getattr(self, property) +
+          getattr(team_stats, property))
+
+  def reset(self):
+    for property in CoachStats.properties():
+      setattr(self, property, 0)
+
+  def compute_awp(self):
+    self.awp = max(0.0,
+        (self.wins + self.draws/2.0) / self.matches - 
+        1 / math.sqrt(self.matches))
+
+for coach in Coach.all():
+   coach_stats = CoachStats(parent=coach)
+   print coach.key().name()
+   for team in Team.all().filter("coach = ", coach):
+       print "   " + team.key().name()
+       CoachStats.accumulate(coach_stats, team)
+   CoachStats.compute_awp(coach_stats)
+   coach_stats.put()
+
+############################################################################################
+
+def i2s(val): 
+   return str(int(val)) # do not use str() in case of unicode
+
+# Say hello to the current user
+user = users.get_current_user()
+if user:
+  nickname = user.nickname()
+else:
+  nickname = "guest"
+print "Hello, " + nickname
+
+coach = Coach.all().filter("user =", user).get()
+team_record = TeamRecord(cas_for = 100, result = 1, tv=940, tv_for=940)
+# print team_record.properties()
+
+coach_stats = CoachStats.all().ancestor(coach).get()
+coach_stats.update(team_record)
+
+coach_stats_list = []
+put_list = []
+  
+# update leader standings for each team
+for leader in CoachLeader.all():
+   for coach_stats in coach_stats_list:
+      put_list.append(CoachLeaderStanding(
+          key_name = coach_stats.parent().key().name(),
+          parent   = leader,
+          coach_stats     = coach_stats,
+          score    = leader.get_score(coach_stats)))
+print put_list
+
+coach = team.coach
+if coach:
+coach_stats = CoachStats.all().ancestor(coach).get()
+coach_stats.update(team_record)
+coach_stats_list.append(coach_stats)

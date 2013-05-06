@@ -1,0 +1,67 @@
+
+<script type="text/javascript">
+  analytics();
+
+{% block javascript %}
+{% endblock %}
+                                                 
+$(function() {
+  $('.leader_table tbody').hover(function() {
+    var leader_section = $(this).parents("div.leader_section");
+    var stats = leader_section.find(".leader_stats")
+    stats.stop(true, true).toggle(500);
+    var box = leader_section.find(".leader_box_active");
+    box.stop(true, true).toggle(200);
+  });
+
+  $('.leader_table tr').hover(function() {
+    var leader_section = $(this).parents("div.leader_section");
+    var row_number = $(this).attr("class").split("_")[1];
+
+    var box = leader_section.find(".leader_box_" + row_number);
+    leader_section.find(".leader_box_active").html(box.html()).css(
+      "background-color", box.css("background-color"));
+
+    var info = leader_section.find(".leader_info_" + row_number);
+    info.toggle();
+  });
+});
+
+</script>
+
+{% for leader, leader_table, leader_stats_table, leaders, leader_names in leader_info %}
+<div class="h2">
+  <h2> {{ leader.top_text }} {{ leader.key.name }} </h2>
+</div>
+<p>
+<i>
+Formula: {{ leader.formula }}
+</i>
+</p>
+
+<div class="leader_section">
+{% with leader_table as table %}
+{% include "table.html" %}
+{% endwith %}
+
+<div class="leader_stats">
+<div class="leader_name"> &nbsp; 
+{% for leader_name in leader_names %}
+<span class="leader_info leader_info_{{ forloop.counter }}">
+  {{ leader_name|safe }}
+</span>
+{% endfor %}
+</div>
+{% with leader_stats_table as table %}
+{% include "table.html" %}
+{% endwith %}
+</div>
+
+{% block boxes %}
+{% endblock %}
+
+</div>
+{% endfor %}
+
+
+

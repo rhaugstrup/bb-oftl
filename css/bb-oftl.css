@@ -1,0 +1,893 @@
+
+/* RESET */
+td, th {
+  text-align: left;
+}
+
+input {
+  margin: 0px;
+  margin-left: 5px;
+}
+
+iframe {
+  border: 1px solid #999933;
+  overflow: auto;
+  width: 100%;
+  height: 500px;
+}
+
+/* LAYOUT
+ *--------------------------------------------------------------------*/
+
+html {
+  /* chrome bug: this needs to be in html *NOT* body */
+  background-color: #0B1E29;
+}
+
+#masthead {
+  position: absolute;
+  left: 127px;
+  top: -53px;
+  display: block;
+  height: 80px;
+  width: 650px;
+  z-index: 10;
+}
+
+#wrapper {
+  position: relative;
+  left: -2px;
+  background-color: #b5c2ca;
+  margin: 58px auto 0px auto;
+  padding: 12px 14px;
+  width: 872px;
+}
+
+#navmain {
+  background: transparent url(http://www.shalkith.com/bloodbowl/images/bg_Navmain.png) 0px 0px no-repeat;
+  font-size: 9pt;
+  font-weight: bold;
+  position: relative;
+  margin-top: 19px;
+  margin-bottom: -8px;
+  left: -4px;
+  padding: 16px 0px 18px 65px;
+  z-index: 4
+}
+  
+#navmain a {
+  text-transform: uppercase;
+  padding: 0px 10px;
+}
+
+#content {
+  position: relative;
+  left: 1px;
+  background-color: #f1f1f1;
+  border: 1px solid black;
+}
+
+#section {
+  padding: 5px;
+}
+
+#footer {
+  color: #ffffff;
+  padding: 10px;
+  height: 30px;
+  width: 872px;
+  margin: auto;
+  text-align: center;
+}
+
+#footer a {
+  color: #cccccc;
+  font-weight: bold;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+#footer a:hover {
+  text-decoration: underline;
+}
+
+.loading {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  color: white;
+  font-size: 10pt;
+  font-style: italic;
+}
+
+
+/* GLOBAL 
+ *--------------------------------------------------------------------*/
+
+body { 
+  color: #000033;
+  font: 8pt arial;
+  font-weight: normal;
+}
+
+/* links */
+div.link {
+  border: 1px solid #000099;
+  cursor: pointer;
+}
+a, span.link {
+  color: #000099;
+  font-weight: bold;
+  cursor: pointer;
+  text-decoration: none;
+}
+a:hover, .link:hover {
+  text-decoration: underline;
+}
+
+/* overline */
+span.over {
+  text-decoration: overline;
+}
+
+/* headers */
+h1 {
+  padding: 3px 0px;
+  border-bottom: 3px solid #b5c2ca;
+  border-top: 1px solid #b5c2ca;
+  font-size: 14pt;
+  font-weight: bold;
+  text-transform: uppercase;
+  margin: 10px 10px;
+}
+div.h2 {
+  margin: 15px 5px;
+}
+h2 {
+  padding: 0px 20px 0px 5px;
+  border-bottom: 1px solid #b5c2ca;
+  display: inline;
+  font-size: 12pt;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+/* don't touch h3 for accordion */
+div.h4 {
+  margin: 15px 5px;
+}
+h4 {
+  padding: 0px 20px 0px 5px;
+  border-bottom: 1px solid #b5c2ca;
+  display: inline;
+  font-size: 11pt;
+  font-weight: bold;
+}
+
+/* paragraphs */
+p.center {
+  text-align: center;
+}
+
+/* VALIDATION
+ *--------------------------------------------------------------------*/
+
+label.error {
+  color: red;
+  padding: 0px 5px;
+}
+
+/* COLOR BOX
+ *--------------------------------------------------------------------*/
+
+div.box {
+  background-color: white;
+  width: 800px;
+  overflow: hidden;
+  position: relative;
+}
+
+div.box p {
+  margin: 15px;
+}
+
+span.go_to_arrow {
+  display: block;
+  font-size: 18px;
+  margin: -3px 0px;
+}
+
+/* stats */
+.tot_stat {
+  display: inline;
+}
+.ave_stat {
+  display: none;
+}
+
+/* stats table */
+table.stats th:first-child {
+  width: 65px;
+}
+table.stats th {
+  width: 45px;
+}
+
+/* logo positioning */
+.logo_right { right: 0px; }
+.logo_left  { left: 0px; }
+
+/* FANCY TABLE
+ *--------------------------------------------------------------------*/
+
+table.fancytable {
+  margin: 15px auto;
+  text-align: center;
+  border-collapse: collapse;
+}
+table.fancytable th {
+  background-color: #0b1e29;
+  color: #f1f1f1;
+}
+table.fancytable td, table.fancytable th {
+  border-right: 2px solid #0b1e29;
+  text-align: center;
+}
+table.fancytable td:first-child, table.fancytable th:first-child {
+  color: inherit;
+  background-color: inherit;
+  font-weight: bold;
+  padding-right: 5px;
+  text-align: right;
+}
+
+/* TABLE SORTER
+ *--------------------------------------------------------------------*/
+
+table.tablesorter {
+  border-collapse: collapse;
+  width: 100%;
+  text-align: left;
+  border-spacing: 1px;
+  border: 1px solid #dce2c2;
+}
+table.tablesorter tr td, table.tablesorter tr th {
+  padding: 2px 3px;
+}
+table.tablesorter thead tr th, table.tablesorter tfoot tr th {
+  color: #000099;
+  border: 1px solid #999933;
+  background: #dce2c2 url(custom-theme/images/ui-bg_highlight-soft_75_dce2c2_1x100.png) 50% 50% repeat-x;
+  font-weight: bold;
+}
+table.tablesorter thead tr th:hover, table.tablesorter tfoot tr th:hover {
+  color: #000033;
+  background: #c0cc66 url(custom-theme/images/ui-bg_highlight-soft_75_c0cc66_1x100.png) 50% 50% repeat-x;
+}
+table.tablesorter tbody tr td {
+  border: 1px solid #aaaaaa;
+  background-color: #dadde3;
+}
+table.tablesorter thead tr .header {
+  cursor: pointer;
+}
+
+/* selected column */
+table.tablesorter thead tr .headerSortDown, table.tablesorter thead tr .headerSortUp,
+table.tablesorter thead tr .headerSortDown:hover, table.tablesorter thead tr .headerSortUp:hover {
+  border: 1px solid #0b1e29;
+  background: #0b1e29 url(custom-theme/images/ui-bg_highlight-soft_75_0b1e29_1x100.png) 50% 50% repeat-x;
+  font-weight: bold;
+  color: #f1f1f1;
+}
+
+/* images */
+table.tablesorter tbody tr td img, table.tablesorter tbody tr td div {
+  width: 16px;
+  height: 16px;
+}
+table.tablesorter tbody tr td > img, table.tablesorter tbody tr td > div {
+  margin: -1px 0px;
+  vertical-align: middle;
+}
+
+/* MATCH
+ *--------------------------------------------------------------------*/
+
+div.match {
+  font-weight: bold;
+  text-align: center;
+}
+
+/* fonts */
+div.match div.large {
+  font-size: 12pt;
+}
+div.match div.small {
+  font-size: 9pt;
+}
+
+/* header stuff */
+div.match div.header {
+  padding: 10px;
+}
+div.match div.tournament {
+  font-weight: normal;
+}
+div.match div.plaque {
+  padding: 10px;
+  border: 1px solid #999933;
+  background-color: #dadde3;
+}
+
+/* contents */
+div.match div.plaque div.scoreline {
+  position: relative;
+  min-height: 80px;
+}
+div.match div.plaque div.logo {
+  position: absolute;
+  top: 0px;
+  width: 64px;
+  height: 64px;
+  border: 2px solid black;
+}
+div.match div.plaque div.logo img {
+  width: 64px;
+  height: 64px;
+}
+div.match div.plaque div.home_logo {
+  left: 0px;
+}
+div.match div.plaque div.away_logo {
+  right: 0px;
+}
+div.match div.plaque div.team {
+  position: absolute;
+  width: 250px;
+  top: 10px;
+}
+div.match div.plaque div.home_team {
+  left: 85px;
+  text-align: left;
+}
+div.match div.plaque div.away_team {
+  right: 85px;
+  text-align: right;
+}
+div.match div.plaque div.score {
+  margin: auto;
+  padding-top: 10px;
+  width: 400px;
+}
+div.match div.plaque div.score span.inactive {
+  font-size: 11pt;
+  cursor: default;
+  color: #dadde3;
+}
+div.match div.plaque div.score span.active {
+  font-size: 11pt;
+  cursor: default;
+  color: #000099;
+}
+div.match div.plaque div.spacer {
+  padding: 5px 0px;
+}
+div.match div.plaque ul {
+  list-style-type: none;
+  margin: 0px;
+  padding: 0px;
+}
+div.match div.plaque ul li:first-child {
+  text-decoration: underline;
+  padding: 5px 0px;
+}
+
+/* TEAM 
+ *--------------------------------------------------------------------*/
+
+/* banner */
+div.team_box div.banner {
+  position: relative;
+  width: 772px;
+  border: 2px solid black;
+  padding: 12px;
+  text-align: center;
+}
+div.team_box div.banner img {
+  position: absolute;
+  height: 64px;
+  width: 64px;
+  top: 0px;
+}
+div.team_box span.title {
+  font-family: times;
+  font-variant: small-caps;
+  line-height: 40px;
+  font-size: 40px;
+  letter-spacing: 1px;
+}
+
+/* trophies */
+div.team_box div.trophies {
+  margin: 10px;
+}
+div.team_box div.trophy {
+  text-align: center;
+  margin: 5px;
+  float: left;
+}
+div.team_box div.trophy img {
+  margin: auto;
+  display: block;
+  height: 40px;
+  border: 1px solid #999933;
+}
+div.team_box div.trophy div.no_img_text {
+  margin: auto;
+  background-color: black;
+  color: #f1f1f1;
+  padding: 12px;
+  font-size: 14px;
+  width: 80px;
+  height: 16px;
+  border: 1px solid #999933;
+}
+
+/* profile stuff */
+div.team_box div.info {
+  position: relative;
+  margin: 15px;
+}
+div.team_box img.race {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  border: 2px solid black;
+  height: 128px;
+  width: 128px;
+}
+div.team_box table.profile {
+  border-collapse: collapse;
+}
+div.team_box table.profile td:first-child {
+  font-weight: bold;
+}
+div.team_box table.profile td {
+  padding: 0px 5px;
+}
+div.team_box table.graph {
+  position: absolute;
+  top: 3px;
+  left: 220px;
+  border-collapse: collapse;
+}
+div.team_box table.graph td {
+  padding: 1px 0px;
+}
+div.team_box table.graph td:first-child {
+  font-weight: bold;
+  text-align: center;
+  width: 20px;
+  border-right: 2px solid black;
+}
+div.team_box table.graph td div.bar {
+  width: 0px;
+  margin: 4px 0px;
+  height: 24px;
+}
+
+/* graph bars */
+.green_text    { color: #11aa11; }
+.green_bg      { background-color: #33ff33; }
+.green_border  { border: 1px solid #11aa11; }
+.yellow_text   { color: #aaaa11; }
+.yellow_bg     { background-color: #ffff33; }
+.yellow_border { border: 1px solid #aaaa11; }
+.orange_text   { color: #aa7711; }
+.orange_bg     { background-color: #ffbb33; }
+.orange_border { border: 1px solid #aa7711; }
+.red_text      { color: #aa1111; }
+.red_bg        { background-color: #ff3333; }
+.red_border    { border: 1px solid #aa1111; }
+
+/* show_hidden */
+div.team_box div.show_hidden {
+  margin: 10px;
+  text-align: center;
+}
+
+/* PLAYER 
+ *--------------------------------------------------------------------*/
+
+/* photo */
+div.player_box div.photo {
+  float: left;
+  position: relative;
+  width: 380px;
+  height: 532px;
+  margin: 5px;
+  border: 5px solid black;
+  background-color: black;
+  background-repeat: no-repeat;
+  background-position: center center;
+}
+div.player_box div.no_photo {
+  position: absolute;
+  top: 250px;
+  width: 380px;
+  color: white;
+  font-size: 20px;
+  text-align: center;
+}
+div.player_box div.photo_name {
+  position: absolute;
+  background-color: #0b1e29;
+  top: 460px;
+  left: -5px;
+  width: 390px;
+  color: white;
+  text-align: center;
+  padding: 4px 0px;
+  border-top: 4px solid white;
+  border-bottom: 4px solid white;
+}
+div.player_box div.photo img {
+  position: absolute;
+  height: 64px;
+  width: 64px;
+  top: 0px;
+}
+
+/* card */
+div.player_box div.card {
+  float: right;
+  width: 390px;
+  margin: 5px;
+  height: 546px;
+  position: relative;
+  overflow: hidden;
+}
+div.player_box div.banner {
+  text-align: center;
+  padding: 8px;
+  border: 2px solid black;
+}
+div.player_box div.player_name {
+  margin: 10px;
+  text-align: center;
+  padding: 6px;
+}
+div.player_box span.title {
+  font-family: times;
+  font-variant: small-caps;
+  font-weight: bold;
+  line-height: 28px;
+  font-size: 28px;
+}
+
+/* profile */
+div.player_box table.profile {
+  margin: 10px 20px;
+  border-collapse: collapse;
+}
+div.player_box table.profile td:first-child {
+  font-weight: bold;
+  width: 90px;
+}
+div.player_box table.profile td {
+  padding: 3px 5px;
+  font-size: 110%;
+  vertical-align: top;
+}
+div.player_box table.profile img {
+  margin: -4px -4px;
+  width: 20px;
+  height: 20px;
+}
+div.player_box div.bio {
+  text-align: justify;
+  margin: -8px 40px 0px 40px;
+}
+
+/* attributes */
+div.player_box table.attr {
+  margin: 10px auto;
+  text-align: center;
+  border-collapse: collapse;
+}
+div.player_box table.attr thead {
+  color: white;
+}
+div.player_box table.attr thead th {
+  background-color: #0b1e29;
+  font-weight: normal;
+}
+div.player_box table.attr tbody td:first-child, div.player_box table.attr thead th:first-child {
+  border-left: 2px solid #0b1e29;
+}
+div.player_box table.attr tbody td, div.player_box table.attr thead th {
+  border-right: 2px solid #0b1e29;
+  font-size: 150%;
+  text-align: center;
+  padding: 0px 29px;
+}
+
+/* show_hidden */
+div.player_box div.show_hidden {
+  position: absolute;
+  top: 515px;
+  padding: 10px 0px;
+  height: 25px;
+  width: 390px;
+  text-align: center;
+  background-color: white;
+}
+
+/* TOURNAMENT
+ *--------------------------------------------------------------------*/
+
+/* banner */
+div.tournament_box img.winner_img {
+  display: block;
+  margin: 20px auto;
+  height: 300px;
+  border: 2px solid #999933;
+}
+div.tournament_box div.banner {
+  background-color: #dce2c2;
+  position: relative;
+  width: 772px;
+  border: 2px solid #999933;
+  padding: 12px;
+  text-align: center;
+}
+div.tournament_box span.title {
+  font-family: times;
+  font-variant: small-caps;
+  line-height: 40px;
+  font-size: 40px;
+  letter-spacing: 1px;
+}
+/* header stuff */
+div.tournament_box div.winner {
+  text-align: center;
+  font-size: 12pt;
+  padding: 10px;
+  margin: 15px;
+}
+div.tournament_box img.race_img {
+  padding: 1px;
+  margin: 1px;
+  height: 48px;
+  border: 1px solid #999933;
+}
+
+/* content */
+div.tournament_box .signup_form {
+  display: inline;
+}
+div.tournament_box .bracket_border {
+  margin: 9px;
+  background-color: #f1f1f1;
+  border: 1px solid #0b1e29;
+}
+div.tournament_box .bracket {
+  margin: 10px;
+}
+div.tournament_box .match_up {
+  padding: 4px;
+  margin: 8px 0px;
+  border: 1px solid #999933;
+  background-color: #dadde3;
+  position: relative;
+  text-align: center;
+}
+div.tournament_box div.result {
+  width: 16px;
+  position: absolute;
+  right: -20px;
+  top: 4px;
+}
+div.tournament_box div.arrow {
+  position: absolute;
+  left: 100%;
+  border-right: 1px solid #999933;
+}
+div.tournament_box div.down_arrow {
+  top: 50%;
+  border-top: 1px solid #999933;
+}
+div.tournament_box div.up_arrow {
+  bottom: 50%;
+  border-bottom: 1px solid #999933;
+}
+
+/* tournaments page */
+#create_tournament_dialog input#tournament_name {
+  width: 200px;
+}
+#create_tournament_dialog input.number {
+  width: 50px;
+}
+#create_tournament_dialog div#races_allowed {
+  margin: 5px 5px;
+}
+#create_tournament_dialog div#races_allowed img {
+  height: 48px;
+  width: 48px;
+  margin: 2px -4px -2px -4px;
+}
+
+/* LEADER
+ *--------------------------------------------------------------------*/
+
+table.leader_table {
+  border-collapse: collapse;
+} 
+table.leader_table th {
+  text-align: left;
+}
+table.leader_table tbody tr td {
+  border-top: 1px solid #999933;
+  border-bottom: 1px solid #999933;
+}
+table.leader_table td a.leader_link {
+  float: left;
+  width: 250px;
+}
+table.leader_table td div {
+  border: 1px solid #888888;
+}
+table.leader_table td img, table.leader_table td div {
+  vertical-align: middle;
+  width: 16px;
+  height: 16px;
+}
+div.leader_section {
+  position: relative;
+  min-height: 235px;
+}
+
+/* leader boxes */
+.leader_box {
+  position: absolute;
+  background-color: black;
+  border: 1px solid #888888;
+  display: block;
+  top: 10px;
+  z-index: 0;
+}
+.leader_box img {
+  width: 100%;
+}
+.leader_box img.player_img {
+  height: 100%;
+}
+.leader_box img.team_img {
+  margin-top: 20%;
+}
+.leader_box_1 {
+  left: 350px;
+  width: 60px;
+  height: 84px;
+}
+.leader_box_2 {
+  left: 415px;
+  width: 55px;
+  height: 77px;
+}
+.leader_box_3 {
+  left: 475px;
+  width: 50px;
+  height: 70px;
+}
+.leader_box_4 {
+  left: 530px;
+  width: 46px;
+  height: 64px;
+}
+.leader_box_5 {
+  left: 581px;
+  width: 42px;
+  height: 59px;
+}
+.leader_box_6 {
+  left: 628px;
+  width: 39px;
+  height: 55px;
+}
+.leader_box_7 {
+  left: 672px;
+  width: 36px;
+  height: 51px;
+}
+.leader_box_8 {
+  left: 713px;
+  width: 34px;
+  height: 48px;
+}
+.leader_box_9 {
+  left: 752px;
+  width: 32px;
+  height: 45px;
+}
+.leader_box_10 {
+  left: 789px;
+  width: 31px;
+  height: 43px;
+}
+.leader_box_active {
+  background-color: black;
+  width: 80px;
+  height: 112px;
+  top: 110px;
+  left: 350px;
+  display: none;
+}
+.leader_info {
+  display: none;
+}
+.leader_name {
+  font-weight: bold;
+  text-align: center;
+  font-size: 11pt;
+  padding-left: 25px;
+  margin: 10px;
+}
+.leader_stats {
+  position: absolute;
+  top: 115px;
+  left: 440px;
+  display: none;
+}
+
+/* leader stats */
+table.leader_stats_table {
+  margin: 0px;
+  height: 62px;
+}
+table.leader_stats_table td {
+  width: 25px;
+}
+table.leader_stats_table td:first-child {
+  width: 50px;
+}
+
+/* DIALOGS
+ *--------------------------------------------------------------------*/
+
+div.dialog {
+  margin: auto;
+  display: none;
+}
+div#working_dialog {
+  text-align: center;
+  padding: 20px;
+  font-size: 9pt;
+}
+div#logo_dialog img {
+  cursor: pointer;
+  height: 64px;
+  width: 64px;
+  padding: 1px;
+  border: 2px solid transparent;
+}
+div#logo_dialog img.selected {
+  border: 2px solid #333333;
+}
+div#bio_dialog {
+  text-align: center;
+}
+div#color_dialog div#color_wrapper {
+  text-align: center;
+  margin: auto;
+  width: 195px;
+}
+
+/* COACH'S PAGE
+ *--------------------------------------------------------------------*/
+
+#ofl_admin_form input.number {
+  width: 25px;
+}
+

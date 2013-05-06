@@ -1,0 +1,40 @@
+
+<script type="text/javascript">
+  analytics();
+
+$(function() {
+  $('a[rel="matches"]').colorbox({
+    current: "",
+    href: function() { return $(this).attr('href').replace("#", ""); },
+    scrolling: false
+  });
+  $('a[rel="match_tournaments"]').colorbox({
+    current: "",
+    href: function() { return $(this).attr('href').replace("#", ""); },
+    scrolling: false
+  });
+  $('a[rel="match_teams"]').colorbox({
+    current: "",
+    href: function() { return $(this).attr('href').replace("#", ""); },
+    scrolling: false
+  });
+  $('a[rel="match_players"]').colorbox({
+    current: "",
+    href: function() { return $(this).attr('href').replace("#", ""); },
+    scrolling: false
+  });
+  $('a[rel="coach"]').colorbox({
+    current: "",
+    href: function() { return $(this).attr('href').replace("#", ""); },
+    scrolling: false
+  });
+});
+</script>
+
+{% for match_data in matches_data %}
+{% include "match_header.html" %}
+{% if not forloop.last %}
+<br />
+{% endif %}
+{% endfor %}
+

@@ -1,0 +1,48 @@
+
+<script type="text/javascript">
+  analytics();
+
+$(function() {
+  $('a[rel="winners"]').colorbox({
+    current: "",
+    href: function() { return $(this).attr('href').replace("#", ""); },
+    scrolling: false
+  });
+  $('a[rel="tournaments"]').colorbox({
+    current: "",
+    href: function() { return $(this).attr('href').replace("#", ""); },
+    scrolling: false
+  });
+
+  $('span.log_in').live('click', function() {
+    $('#tabs').tabs('select', 5);
+    $.fn.colorbox.close();
+    return false;
+  });
+
+  $('.tournaments_table').tablesorter();
+});
+</script>
+
+<p>
+  Special rules and information on tournaments can be found on the forums in the
+  <a href="http://www.shalkith.com/bloodbowl/forum/viewtopic.php?f=13&t=4">OFTL League Rules & FAQ</a>.
+  To sign up for an open tournament, click on a tournament link
+  in the Open Tournaments table below to get to the sign-up sheet.
+  If the team you wish to sign up has never before played in the
+  OFTL you must first
+  <span class="link log_in">pre-register the team</span>.
+</p>
+
+{% for type, table in tables %}
+<div class="h2">
+  <h2>{{ type }} Tournaments</h2>
+</div>
+{% if table.rows %}
+  {% include "table.html" %}
+{% else %}
+  <i>There are currently no tournaments {{ type.lower }}.</i>
+{% endif %}
+{% endfor %}
+
+

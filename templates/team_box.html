@@ -1,0 +1,269 @@
+<style type="text/css">
+
+div.team_box div.banner {
+  background-color: {{ team.color }};
+  color: {{ banner_text_color }};
+}
+
+</style>
+
+<script type="text/javascript">
+
+$(function() {
+  $('#{{ team.key }}-matches').accordion();
+
+  // don't do this -- think of the match link:
+  // $('.match_stats').tablesorter();
+
+  $('#{{ player_table.id }}').tablesorter({
+    sortInitialOrder: "desc",
+    sortList: [[0,0]]
+  });
+
+  $("#{{ team.key }}-show-averages-toggle").html("Total")
+  .toggle(function () {
+    $(this).html("Average")
+    $('.tot_stat').fadeOut(500, function() {
+      $('.ave_stat').fadeIn(500);
+    });
+  }, function () {
+    $(this).html("Total")
+    $('.ave_stat').fadeOut(500, function() {
+      $('.tot_stat').fadeIn(500);
+    });
+  });
+
+  $('a[rel="trophy_tournaments"]').colorbox({
+    current: "",
+    href: function() { return $(this).attr('href').replace("#", ""); },
+    copy: true,
+    scrolling: false
+  });
+
+  $('a[rel="team_tournaments"]').colorbox({
+    current: "",
+    href: function() { return $(this).attr('href').replace("#", ""); },
+    copy: true,
+    scrolling: false
+  });
+
+  $('a[rel="team_opponents"]').colorbox({
+    current: "",
+    href: function() { return $(this).attr('href').replace("#", ""); },
+    copy: true,
+    scrolling: false
+  });
+
+  $('a[rel="team_matches"]').colorbox({
+    current: "",
+    href: function() { return $(this).attr('href').replace("#", ""); },
+    copy: true,
+    scrolling: false
+  });
+
+  $('a[rel="team_players"]').colorbox({
+    current: "",
+    href: function() { return $(this).attr('href').replace("#", ""); },
+    copy: true,
+    scrolling: false
+  });
+  
+  $('a[rel="coach"]').colorbox({
+    current: "",
+    href: function() { return $(this).attr('href').replace("#", ""); },
+    scrolling: false
+  });
+
+  $('.hidden').hide()
+  $('div.show_hidden .link').click(function () {
+    $('div.hidden').show();
+    $(this).hide();
+    $.fn.colorbox.resize();
+  });
+
+  var win_width  = (325 * {{ team.wins }} / {{ longest_bar_length }}) + "px";
+  var draw_width = (325 * {{ team.draws }} / {{ longest_bar_length }}) + "px";
+  var loss_width = (325 * {{ team.losses }} / {{ longest_bar_length }}) + "px";
+
+  $('#{{ team.key }}-win-bar' ).animate( { width: win_width  }, 1500, "easeOutCirc");
+  $('#{{ team.key }}-draw-bar').animate( { width: draw_width }, 1500, "easeOutCirc");
+  $('#{{ team.key }}-loss-bar').animate( { width: loss_width }, 1500, "easeOutCirc");
+});
+
+</script>
+
+
+<div class="team_box box">
+  <div class="banner">
+    <img class="logo_left"  src="{{ team.get_logo_url }}" />
+    <img class="logo_right" src="{{ team.get_logo_url }}" />
+    <span class="title">{{ team.key.name }}</span>
+  </div>
+
+  <div class="info">
+
+    <!-- race right float -->
+    <img class="race" src="{{ team.race.get_image_src }}" />
+
+    <!-- center graph -->
+    <table class="graph">
+      <tbody>
+        <tr>
+          <td>W</td>
+          <td><div id="{{ team.key }}-win-bar" class="bar green_bg green_border"></div></td>
+        </tr>
+        <tr>
+          <td>D</td>
+          <td><div id="{{ team.key }}-draw-bar" class="bar yellow_bg yellow_border"></div></td>
+        </tr>
+        <tr>
+          <td>L</td>
+          <td><div id="{{ team.key }}-loss-bar" class="bar red_bg red_border"></div></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- profile -->
+    <table class="profile">
+      <tbody> 
+        <tr>
+          <td title="Coach">Coach:</td>
+          {% if team.coach %}
+            <td>
+              <a rel="coach" href="{{ team.coach.get_box_href }}">
+                {{ team.coach.key.name }}
+              </a>          
+            </td>
+          {% else %}
+            <td><i>Unknown</i></td>
+          {% endif %}
+        </tr>
+		<tr>
+          <td title="Record">Record:</td>
+          <td>{{ team.wins }} - {{ team.draws }} - {{ team.losses }}</td>
+        </tr>
+        <tr>
+          <td title="Team value (approximate)">TV:</td>
+          <td>{{ team.tv }}</td>
+        </tr>
+        <tr>
+          <td title="Glicko rating">Rating:</td>
+          <td>{{ team.glicko_r|floatformat:0 }}</td>
+        </tr>
+        <tr>
+          <td title="Fan factor (at time of last match)">Fan Factor:</td>
+          <td>{{ team.ff }}</td>
+        </tr>
+        <tr>
+          <td title="Team rerolls (at time of last match)">Rerolls:</td>
+          <td>{{ team.rerolls }}</td>
+        </tr>
+        <tr>
+          <td title="Apothecaries (at time of last match)">Apothecaries:</td>
+          <td>{{ team.apoths }}</td>
+        </tr>
+        <tr>
+          <td title="Assistant Coaches (at time of last match)">Assistant Coaches:</td>
+          <td>{{ team.coaches }}</td>
+        </tr>
+        <tr>
+          <td title="Cheerleaders (at time of last match)">Cheerleaders:</td>
+          <td>{{ team.cheers }}</td>
+        </tr>
+        <tr>
+          <td title="Cash in treasury (at time of last match)">Treasury:</td>
+          <td>
+            {% if team.cash %}
+            {{ team.cash|stringformat:"s"|slice:":-3" }}K
+            {% else %}
+            Empty
+            {% endif %}
+          </td>
+        </tr>
+        <tr>
+          <td title="Currently active tournament">Active Tournament:</td>
+          <td>
+            {% if active_tournament %}
+            <a rel="team_tournaments"
+              href="{{ active_tournament.get_box_href }}">
+              {{ active_tournament.key.name }}
+            </a>
+            {% else %}
+            None
+            {% endif %}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  {% if team.tpts %}
+  <div class="h2">
+    <h2>Trophy Cabinet</h2>
+  </div>
+  <div class="trophies">
+    {% for tournament in team.tournament_set %}
+    <div class="trophy">
+      {% if tournament.pic %}
+      <img src='get_trophy?size=cabinet&tournament_key={{ tournament.key }}' />
+      {% else %}
+      <div class="no_img_text">
+        no image
+      </div>
+      {% endif %}
+      <br />
+      <a rel="trophy_tournaments" href="{{tournament.get_box_href }}">
+        {{ tournament.key.name }}</a>
+    </div>
+    {% endfor %}
+    <br style="clear: both" />
+  </div>
+  {% endif %}
+
+  {% if team.bio %}
+  <div class="h2">
+    <h2>Biography</h2>
+  </div>
+  <p>
+    {{ team.bio|linebreaks }}
+  </p>
+  {% endif %}
+
+  <div class="h2">
+    <h2>Team Roster</h2>
+  </div>
+  {% with player_table as table %}
+  {% include "table.html" %}
+  {% endwith %}
+
+  <div class="show_hidden">
+    <span class="link">more</span>
+  </div>
+
+  <div class="hidden">
+    <div class="h2">
+      <h2>Team Statistics</h2>
+    </div>
+    {% with stat_table as table %}
+    {% include "table.html" %}
+    {% endwith %}
+
+    <div class="h2">
+      <h2>Team Match History</h2>
+    </div>
+
+    <div class="team_matches" id="{{ team.key }}-matches">
+      {% for href, match_table in match_tables %}
+      <h3><a href="#"> {{ match_table.title|safe }} </a></h3>
+      <div class="team_match">
+        {% with match_table as table %}
+        {% include "table.html" %}
+        {% endwith %}
+      </div>
+      {% endfor %}
+    </div>
+
+  </div>
+</div>
+
+

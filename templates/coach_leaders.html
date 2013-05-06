@@ -1,0 +1,15 @@
+
+{% extends "leaders.html" %}
+
+{% block javascript %}
+  $('a[rel="leader_coach"]').colorbox({
+    current: "",
+    href: function() { return $(this).attr('href').replace("#", ""); },
+    scrolling: false
+  });
+{% endblock %}
+
+
+
+
+

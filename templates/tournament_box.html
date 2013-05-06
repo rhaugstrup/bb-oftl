@@ -1,0 +1,191 @@
+
+<script type="text/javascript">
+
+$(function() {
+  $('.signup_form').ajaxForm({
+    beforeSubmit: function() {
+      open_working();
+    },
+    success: function() {
+      $('#tabs').tabs('load', 4);
+      $.fn.colorbox.close();
+      close_working();
+    }
+  });
+  $('a[rel="tournament_matches"]').colorbox({
+    current: "",
+    href: function() { return $(this).attr('href').replace("#", ""); },
+    copy: true,
+    scrolling: false,
+  });
+  $('a[rel="winning_team"]').colorbox({
+    current: "",
+    href: function() { return $(this).attr('href').replace("#", ""); },
+    copy: true,
+    scrolling: false,
+  });
+  $('a[rel="tournament_teams"]').colorbox({
+    current: "",
+    href: function() { return $(this).attr('href').replace("#", ""); },
+    copy: true,
+    scrolling: false,
+  });
+});
+
+</script>
+
+
+<div class="tournament_box box">
+  <div class="banner">
+    <span class="title">{{ tournament.key.name }}</span>
+  </div>
+
+  {% if tournament.pic %}
+  <img class="winner_img" src='get_trophy?size=box&tournament_key={{ tournament.key }}' />
+  {% endif %}
+
+  {% if tournament.winning_team %}
+  <div class="winner">
+    Winner: <a rel="winning_team" href="{{ tournament.winning_team.get_box_href }}">
+      {{ tournament.winning_team.key.name }}</a>
+  </div>
+  {% endif %}
+
+  {% if tournament.background %}
+  <div class="h2">
+    <h2>Tournament Background</h2>
+  </div>
+  <p>
+  {{ tournament.background|linebreaks }}
+  </p>
+  {% endif %}
+
+  {% if races_allowed %}
+  <div class="h2">
+    <h2>Tournament Races Allowed</h2>
+  </div>
+  <p class="center">
+  {% for race in races_allowed %}
+  <img class='race_img' src='{{ race.get_image_src }}' />
+  {% endfor %}
+  </p>
+  {% endif %}
+
+{% if tournament.started %}
+
+  <div class="h2">
+    <h2>Tournament Bracket</h2>
+  </div>
+  <div class="bracket_border">
+    <div class="bracket">
+    {% for round, team_data, left, arrow_width, arrow_class, match_data in match_up_data %}
+    <div class="match_up" style="
+      z-index: {{ round }};
+      left: {{ left }}px;
+      width: {{ match_width }}px;">
+
+      <div>
+      {% ifnotequal tournament.seed_by "Random" %}
+      {% if team_data.0.seed %}
+      (#{{ team_data.0.seed }})
+      {% endif %}
+      {% endifnotequal %}
+      {{ team_data.0.name|safe }}
+      </div>
+      <i>
+      {% if match_data %}
+      <a rel="tournament_matches" href="{{ match_data.get_box_href }}">vs.</a>
+      {% else %}
+      vs.
+      {% endif %}
+      </i>
+      <div>
+      {% ifnotequal tournament.seed_by "Random" %}
+      {% if team_data.1.seed %}
+      (#{{ team_data.1.seed }})
+      {% endif %}
+      {% endifnotequal %}
+      {{ team_data.1.name|safe }}
+      </div>
+
+      <div class="result">
+        <div> {{ team_data.0.score|safe }} </div>
+        <br />
+        <div> {{ team_data.1.score|safe }} </div>
+      </div>
+
+      {% if arrow_class %}
+      <div style="
+        height: {{ round|power:2|multiply:65 }}px;
+        width:  {{ arrow_width }}px;
+        " class="arrow {{ arrow_class }}" />
+      {% endif %}
+
+    </div>
+    {% endfor %}
+    </div>
+  </div>
+
+{% endif %}
+
+  <div class="h2">
+    <h2>Tournament Sign Up Sheet</h2>
+  </div>
+  <p>
+  {% if tournament.started %}
+    This tournament has started.  Sign up is closed.
+  {% else %}
+    {% if not coach %}
+      Please <span class='link log_in'>log in</span> to sign up.
+    {% else %}
+      {% if signed_up %}
+        You have already signed up.
+      {% else %}
+        Sign up below.
+      {% endif %}
+    {% endif %}
+  {% endif %}
+  </p>
+
+  <ul>
+  {% for team in teams %}
+  <li>
+  {% if team.matches %}
+  <a rel='tournament_teams' href='{{ team.get_box_href }}'>{{ team.key.name }}</a>
+  {% else %}
+  <b>{{ team.key.name }}</b>
+  {% endif %}
+  ({{ team.race.key.name }}) &minus; <i>{{ team.coach.key.name }}</i>
+  {% if not tournament.started %}
+    {% ifequal team.coach.key coach.key %}
+    <form class="signup_form" id="withdraw_team_form" action="/withdraw_team" method="post">
+      <input type="hidden" name="tournament_key" value="{{ tournament.key }}" />
+      <input type="submit" value="Withdraw!"/>
+    </form>
+    {% endifequal %}
+  {% endif %}
+  </li>
+  {% endfor %}
+  {% if coach and not signed_up %}
+  <li>
+  {% if eligible_teams %}
+    <form class="signup_form" id="enroll_team_form" action="/enroll_team" method="post">
+      <input type="hidden" name="tournament_key" value="{{ tournament.key }}" />
+      <select name="team_key">
+        {% for team in eligible_teams %}
+        <option value="{{ team.key }}">{{ team.key.name }}</option>
+        {% endfor %}
+      </select>  &minus; <i>{{ coach.key.name }}</i>
+      <br />
+      <input type="submit" value="Sign Up!"/>
+    </form>
+  {% else %}
+  <i>You have no eligible teams.</i>
+  {% endif %}
+  </li>
+  {% endif %}
+  </ul>
+  
+</div>
+
+

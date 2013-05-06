@@ -1,0 +1,539 @@
+
+<script type="text/javascript">
+$(function() {
+  analytics();
+
+  var form_options = {
+    beforeSerialize: function() {
+      open_working();
+    },
+    success: function() {
+      $('#tabs').tabs('load', 5);
+    }
+  };
+
+  $('.ajax_form').ajaxForm(form_options);
+
+  $.validator.addMethod("divisible_by_ten", function(value, element) {
+    return this.optional(element) || value % 10 == 0;
+  }, "Must be a multiple of 10");
+
+  $("#register_form").validate({
+    rules: {
+      coach_name: { required: true }
+    },
+    submitHandler: function(form) {
+      $(form).ajaxSubmit(form_options);
+    }
+  });
+
+  $("#ofl_admin_form").validate({
+    rules: {
+      wins: { required: true, range: [0, 100] },
+      draws: { required: true, range: [0, 100] },
+      losses: { required: true, range: [0, 100] }
+    },
+    submitHandler: function(form) {
+      $(form).ajaxSubmit(form_options);
+    }
+  });
+
+  $("#create_tournament_form").validate({
+    rules: {
+      tournament_name: { required: true },
+      min_tv: { divisible_by_ten: true, range: [500, 3000] },
+      max_tv: { divisible_by_ten: true, range: [500, 3000] },
+      min_ma: { range: [0, 100] },
+      max_ma: { range: [0, 100] },
+      max_enrollment: { required: true, range: [4,64] }
+    },
+    submitHandler: function(form) {
+      $(form).parent().dialog('close');
+      $(form).ajaxSubmit($.extend(
+          {}, form_options, 
+          { data: { coach_key_name: '{{ coach.key.name }}' } }));
+    }
+  });
+
+  $("#preregister_team_form").validate({
+    rules: {
+      team_name: { required: true },
+      team_tv: { required: true, divisible_by_ten: true, range: [500, 3000] }
+    },
+    submitHandler: function(form) {
+      $(form).parent().dialog('close');
+      $(form).ajaxSubmit(form_options);
+    }
+  });
+
+  var player_key;
+  var pic_div;
+  $("#pic_form").validate({
+    rules: {
+      pic: { required: true }
+    },
+    submitHandler: function(form) {
+      $(form).parent().dialog('close');
+      $(form).ajaxSubmit($.extend(
+          {}, form_options, 
+          { data: { player_key: player_key },
+            success: function() { 
+              pic_div.html(
+                '<img src="get_pic?size=thumb&refresh=' +
+                new Date().getTime() +
+                '&player_key=' + player_key + '" />');
+              close_working();
+            } }));
+    }
+  });
+
+  var team_key;
+  var logo_div;
+  $("#logo_form").validate({
+    rules: {
+      logo: { required: true }
+    },
+    submitHandler: function(form) {
+      $(form).parent().dialog('close');
+      $(form).ajaxSubmit($.extend(
+          {}, form_options, 
+          { data: { team_key: team_key },
+            success: function() { 
+              logo_div.html(
+                '<img src="get_logo?size=thumb&refresh=' +
+                new Date().getTime() +
+                '&team_key=' + team_key + '" />');
+              close_working();
+            } }));
+    }
+  });
+
+  $('.create_tournament_link').click(function() {
+    $("#create_tournament_form").resetForm();
+
+    $("#races_allowed").hide();
+    $("#races_allowed input.race").button();
+
+    $("#race_restriction").unbind('click');
+    $("#race_restriction").click(function() {
+      $("#races_allowed").toggle();
+    });
+
+    $('#create_tournament_dialog').dialog({
+      modal: true,
+      width: 700,
+      buttons: {
+        'Cancel': function() {
+          $(this).dialog('close');
+        },
+        'Create': function() {
+          $('#create_tournament_form').submit();
+        }
+      }
+    });
+  });
+
+  $('.preregister_team_link').click(function() {
+    $('#preregister_team_dialog').dialog({
+      modal: true,
+      width: 700,
+      buttons: {
+        'Cancel': function() {
+          $(this).dialog('close');
+        }{% if coach %},
+        'Create': function() {
+          $('#preregister_team_form').submit();
+        }
+        {% endif %}
+      }
+    });
+  });
+
+  $('.change_seeding').click(function() {
+    var seed_div = $(this);
+    var key = seed_div.attr('id').split("_")[2];
+
+    $.get('get_seeds?key=' + key, function(data) {
+      var seed_dialog =
+          $('<div class="dialog" title="Seed tournament" />');
+
+      var seed_form =
+          $('<form action="/seed_tournament" method="post" />')
+          .appendTo(seed_dialog)
+          .ajaxForm(form_options);
+
+      seed_form.html(data);
+      seed_dialog.dialog({
+        modal: true,
+        width: 700,
+        buttons: {
+          'Cancel': function() {
+            $(this).remove();
+          },
+          'Start': function() {
+            seed_form.submit();
+            $(this).remove();
+          }
+        }
+      });
+    });
+  });
+
+  
+  $('.change_bio').click(function() {
+    var bio_div = $(this);
+    var key = bio_div.attr('id').split("_")[2];
+
+    $("#bio_form").resetForm();
+    $.get('get_bio?key=' + key, function(data) {
+      $('#bio_textarea').val(data);
+      $('#bio_dialog').dialog({
+        modal: true,
+        width: 700,
+        buttons: {
+          'Cancel': function() {
+            $(this).dialog('close');
+          },
+          'Save': function() {
+            open_working();
+            bio_text = $('#bio_textarea').val();
+            $.post('change_bio', {
+              key: key,
+              bio: bio_text
+            }, function () {
+              if (bio_text.length > 40) {
+                bio_text = bio_text.substring(0,40) + "...";
+              }
+              if (bio_text.trim().replace("\n", "").length == 0) {
+                bio_text = "<i>None</i>";
+              }
+              bio_div.html(bio_text);
+              close_working();
+            });
+            $(this).dialog('close');
+          }
+        }
+      });
+    });
+  });
+
+  $('.change_pic').click(function() {
+    pic_div = $(this);
+    player_key = pic_div.attr('id').split("_")[2];
+
+    $("#pic_form").resetForm();
+    $('#pic_dialog').dialog({
+      modal: true,
+      width: 350,
+      buttons: {
+        'Cancel': function() {
+          $(this).dialog('close');
+        },
+        'Save': function() {
+          $('#pic_form').submit();
+        }
+      }
+    });
+  });
+
+  $('.change_logo').click(function() {
+    logo_div = $(this);
+    team_key = logo_div.attr('id').split("_")[2];
+
+    $("#logo_form").resetForm();
+    $('#logo_dialog').dialog({
+      modal: true,
+      width: 350,
+      buttons: {
+        'Cancel': function() {
+          $(this).dialog('close');
+        },
+        'Save': function() {
+          $('#logo_form').submit();
+        }
+      }
+    });
+  });
+
+  $('a[rel="coach_tournaments"]').colorbox({
+    current: "",
+    href: function() { return $(this).attr('href').replace("#", ""); },
+    scrolling: false
+  });
+  $('.coach_tournaments_table').tablesorter();
+
+  $('.coach_player_tables').accordion({ autoHeight: false });
+
+  $('a[rel="coach_players"]').colorbox({
+    current: "",
+    href: function() { return $(this).attr('href').replace("#", ""); },
+    scrolling: false,
+  });
+
+  $('a[rel="coach_teams"]').colorbox({
+    current: "",
+    href: function() { return $(this).attr('href').replace("#", ""); },
+    scrolling: false,
+  });
+  $('.coach_player_table').tablesorter({
+    sortList: [[3,0],[0,0]]
+  });
+  $('.coach_team_table').tablesorter({
+    sortList: [[0,1]]
+  });
+});
+</script>
+
+{% if not user %}
+<p>
+Please <a href="{{ log_in_url }}">log in</a>.
+</p>
+{% else %}
+
+<p style="float: right">
+<a href="{{ log_out_url }}">log out from this Google Account</a>
+</p>
+{% if not coach %}
+<p>
+  Welcome to the OFTL!
+</p>
+<p>
+  <form id="register_form" action="/register" method="post">
+    Please enter your coach name: <input type="text" name="coach_name" />
+    <input type="submit" value="Submit" />
+  </form>
+</p>
+
+{% else %}
+
+<div class="dialog" id="bio_dialog" title="Write a biography">
+  <form id="bio_form">
+    <textarea cols=80 rows=10 id="bio_textarea" name="bio"></textarea>
+  </form>
+</div>
+
+<div class="dialog" id="logo_dialog" title="Upload team logo">
+  <p>
+  Team logos must be in JPEG, PNG, GIF, BMP, TIFF, or ICO format
+  and will ideally have a square aspect ratio. 
+  The images will be automatically scaled and stored in the database at a
+  resolution of 128x128 pixels.
+  </p>
+  <form id="logo_form" action="/change_logo" enctype="multipart/form-data" method="post">
+    <input type="file" name="logo" />
+  </form>
+</div>
+
+<div class="dialog" id="pic_dialog" title="Upload player picture">
+  <p>
+  Player images must be in JPEG, PNG, GIF, BMP, TIFF, or ICO format
+  and will ideally have a 5x7 aspect ratio. 
+  The images will be automatically scaled and stored in the database at a
+  resolution of 380x532 pixels.
+  </p>
+  <form id="pic_form" action="/change_pic" enctype="multipart/form-data" method="post">
+    <input type="file" name="pic" />
+  </form>
+</div>
+
+<div class="dialog" id="preregister_team_dialog" title="Pre-register a team">
+  <form id="preregister_team_form" action="/preregister_team" method="post">
+    <p>
+    Team name (please type carefully; check spelling, capitalization, and spacing):
+    <input type="text" name="team_name" />
+    </p>
+    <p>
+    Team TV:
+    <input type="text" name="team_tv" />
+    </p>
+    <p>
+    Team race:
+    <select name="team_race">
+      {% for race in races %}
+      <option value="{{ race.key.name }}">{{ race.key.name }}</option>
+      {% endfor %}
+    </select>
+    </p>
+  </form>
+</div>
+
+<div class="dialog" id="create_tournament_dialog" title="Create a tournament">
+  <form id="create_tournament_form" action="/create_tournament"
+    enctype="multipart/form-data" method="post">
+
+    <p>
+    Enter the tournament name (must be unique):
+    <input type="text" id="tournament_name" name="tournament_name" />
+    </p>
+
+    <p>
+    Enter the tournament background (optional):
+    <br />
+    <textarea cols=80 rows=3 name="background"></textarea>
+    </p>
+
+    <p>
+    Enter the maximum number of enrolled teams (must be in the range of 4-64):
+    <input class="number" type="text" name="max_enrollment" />
+    </p>
+
+    <p>
+    Enter the accepted range for the TV of enrolling teams (leave blank for no bound):
+    <input type="text" class="number" name="min_tv" /> -
+    <input type="text" class="number" name="max_tv" />
+    </p>
+
+    <p>
+    Enter the accepted range for the matches played of enrolling teams (leave blank for no bound):
+    <input type="text" class="number" name="min_ma" /> -
+    <input type="text" class="number" name="max_ma" />
+    </p>
+
+    <p>
+    Seed teams based on:
+    <input type="radio" id="random" name="seed_by" value="Random" checked="yes" />
+    <label for="random">Random</label>
+    <input type="radio" id="custom" name="seed_by" value="Custom" />
+    <label for="custom">Custom</label>
+    <input type="radio" id="win" name="seed_by" value="AWP" />
+    <label for="win">Adjusted Win Percentage (AWP)</label>
+    <input type="radio" id="rating" name="seed_by" value="Rating" />
+    <label for="rating">Rating</label>
+    <input type="radio" id="tv" name="seed_by" value="TV" />
+    <label for="tv">TV</label>
+    </p>
+
+    <p>
+    <label for="race_restriction">Restrict races?</label>
+    <input type="checkbox" name="race_restriction" id="race_restriction" value="yes" />
+
+    <div id="races_allowed">
+      <p>
+      Select the races to allow:
+      </p>
+      {% for race in races %}
+      <input class="race" type="checkbox" name="races_allowed" 
+            id="{{ race.key.name }}" value="{{ race.key.name }}" />
+      <label for="{{ race.key.name }}">
+        <img src="{{ race.get_image_src }}" />
+      </label>
+      {% endfor %}
+    </div>
+
+    <p>
+    Upload a trophy image (optional).
+    <input type="file" name="trophy_pic" /><br />
+    Your image must be in JPEG, PNG, GIF, BMP, TIFF, or ICO format.
+    Trophy images are automatically scaled to a height of 300 pixels.
+    </p>
+  </form>
+</div>
+
+<div class="h2">
+  <h2>Your Profile</h2>
+</div>
+
+<div class="h2">
+  <h2>Your Tournaments</h2>
+</div>
+{% if not coach_tournament_table %}
+<p><i>
+  You are not the organizer for any currently active tournaments.
+  (<a class="create_tournament_link">Create one</a>.)
+</i></p>
+{% else %}
+{% with coach_tournament_table as table %}
+{% include "table.html" %}
+{% endwith %}
+<p>
+  <a class="create_tournament_link">Create another tournament</a>.
+</p>
+{% endif %}
+
+<div class="h2">
+  <h2>Your teams</h2>
+</div>
+
+{% if coach_team_table.rows %}
+  {% with coach_team_table as table %}
+  {% include "table.html" %}
+  {% endwith %}
+{% else %}
+<p>
+<i>You have not yet claimed any teams.</i>
+</p>
+{% endif %}
+
+<p>
+<span class="link preregister_team_link">Pre-register a team</span> for a tournament.
+</p>
+
+<div class="h2">
+  <h2>Your players</h2>
+</div>
+
+{% if coach_player_tables|length_is:"0" %}
+  <i>You have not yet claimed any teams and/or all your teams are only pre-registered.</i>
+{% else %}
+<div class="coach_player_tables">
+  {% for coach_player_table in coach_player_tables %}
+  <h3><a href="#"> {{ coach_player_table.title }} </a></h3>
+  <div>
+    {% with coach_player_table as table %}
+    {% include "table.html" %}
+    {% endwith %}
+  </div>
+  {% endfor %}
+</div>
+{% endif %}
+
+<div class="h2">
+  <h2>Claim a team</h2>
+</div>
+
+{% if unclaimed_teams.count %}
+<p>
+For obvious reasons, please do not claim a team that is not yours. 
+</p>
+<form class="ajax_form" action="/claim_team" method="post">
+  <select name="team_name">
+    {% for team in unclaimed_teams %}
+    <option value="{{ team.key.name }}">{{ team.key.name }}</option>
+    {% endfor %}
+  </select>
+  <input type="submit" value="Mine!"/>
+</form>
+{% else %}
+<p>
+  <i>No unclaimed teams.</i>
+</p>
+{% endif %}
+
+{% if ofl_admin %}
+<div class="h2">
+  <h2>Administer OFL Eligibility</h2>
+</div>
+
+<p>
+You have privileges to adminster OFL eligibility. 
+The following are teams that are marked as having "Inconsistent Data!" or
+"Incomplete History".
+If you submit history for such a team below, the team will be cleared. 
+Use with caution.
+</p>
+<form id="ofl_admin_form" action="/clear_team_for_OFL" method="post">
+  <select name="team_key">
+    {% for team in ineligible_teams %}
+    <option value="{{ team.key }}">{{ team.key.name }}</option>
+    {% endfor %}
+  </select>
+  W<input type="text" class="number" name="wins" />
+  D<input type="text" class="number" name="draws" />
+  L<input type="text" class="number" name="losses" />
+  <input type="submit" value="Submit history from before OFTL v2.0"/>
+</form>
+{% endif %}
+
+{% endif %}
+{% endif %}
+
