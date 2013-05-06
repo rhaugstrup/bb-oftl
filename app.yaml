@@ -1,0 +1,82 @@
+application: bb-oftl
+version: 3
+runtime: python
+api_version: 1
+
+builtins:
+- datastore_admin: on
+
+admin_console:
+  pages:
+  - name: Interactive Console
+    url: /admin/interactive
+
+handlers:
+- url: /admin/interactive|/admin/interactive/execute
+  script: google.appengine.ext.admin.application
+  login: admin
+  
+- url: /
+  static_files: static/index.html
+  upload: static/index.html
+  
+- url: /remote_api
+  script: $PYTHON_LIB/google/appengine/ext/remote_api/handler.py
+  login: admin
+
+- url: /cron/*
+  script: main.py
+  login: admin
+
+- url: /robots.txt
+  static_files: static/robots.txt
+  upload: static/robots.txt
+
+- url: /submitter/OFTLSubmitter.py
+  static_files: grappl/OFTLSubmitter.py
+  upload: grappl/OFTLSubmitter.py
+
+- url: /submitter/OFTL-submitter.py
+  static_files: grappl/OFTL-submitter.py
+  upload: grappl/OFTL-submitter.py
+
+- url: /CreateCoachStandings
+  script: /misc/CreateCoachLeaderStandings.py
+  
+- url: /CreateCoachStandings2
+  script: /misc/CreateCoachLeaderStandings2.py
+  
+- url: /CreateCoachStats  
+  script: /misc/CreateCoachStats.py
+  
+- url: /favicon.ico
+  static_files: static/favicon.ico
+  upload: static/favicon.ico
+
+- url: /images
+  static_dir: images
+
+- url: /js
+  static_dir: js
+
+- url: /css
+  static_dir: css
+  
+- url: /parent_refresh
+  static_files: static/parent_refresh.html
+  upload: static/parent_refresh.html
+
+- url: .*
+  script: main.py
+
+skip_files:
+- ^(.*/)?app\.yaml
+- ^(.*/)?app\.yml
+- ^(.*/)?index\.yaml
+- ^(.*/)?index\.yml
+- ^(.*/)?#.*#
+- ^(.*/)?.*~
+- ^(.*/)?.*\.py[co]
+- ^(.*/)?.*/RCS/.*
+- ^(.*/)?\..*
+- ^django/.*$
