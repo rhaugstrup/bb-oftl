@@ -70,7 +70,7 @@ indexes:
   ancestor: yes
   properties:
   - name: score
-    direction:desc
+    direction: desc
 
 - kind: TeamLeaderStanding
   ancestor: yes
