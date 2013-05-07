@@ -60,6 +60,18 @@ indexes:
   - name: matches
     direction: desc
 
+- kind: Team
+  properties:
+  - name: coach
+  - name: matches
+    direction: desc
+
+- kind: CoachLeaderStanding
+  ancestor: yes
+  properties:
+  - name: score
+    direction:desc
+
 - kind: TeamLeaderStanding
   ancestor: yes
   properties:
